@@ -1,4 +1,4 @@
-myfile='/home/kmoh19/Downloads/Accounts_Bulk_Data-2016-11-02'#'/ch_acct'#
+myfile='/home/adminuser/Downloads/Accounts'#'/ch_acct'#
 
 def CH_parse(docLink):
     from lxml import etree
@@ -8,13 +8,13 @@ def CH_parse(docLink):
     
     try:
         docTag = etree.fromstring(docLink)
-    except etree.XMLSyntaxError,detail:
-        return detail.error_log
+    except etree.XMLSyntaxError:
+        return #detail.error_log
     
     docTuple.append(docTag.nsmap)
     
     for child in (docTag.getiterator()):
-        if (child.text!=None or child.tail!=None) and re.search('^.*STYLE',(etree.tostring(child)).upper())==None:
+        if (child.text!=None or child.tail!=None) and re.search('^.*STYLE',(etree.tostring(child).decode('utf-8')).upper())==None:
             
             if child.text==None:
                 text=child.text
@@ -125,7 +125,7 @@ def sparkjob():
     dbCH_Cols=dbCH_result.filter(lambda x: re.search('^tagged.*', x[1])!=None)
     dbCH_Col=dbCH_Cols.collect()
     for i in dbCH_Col:
-        print i
+        print (i)
  
             
     sc.stop()

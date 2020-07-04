@@ -1,4 +1,4 @@
-myfile='/home/kmoh19/Downloads/Accounts_Bulk_Data-2016-11-02'
+myfile='/home/adminuser/Downloads/Accounts'
 
 def CH_parse(docLink):
     from lxml import etree
@@ -8,13 +8,13 @@ def CH_parse(docLink):
     
     try:
         docTag = etree.fromstring(docLink)
-    except etree.XMLSyntaxError,detail:
-        return detail.error_log
+    except etree.XMLSyntaxError:
+        return #detail.error_log
     
     docTuple.append(docTag.nsmap)
     
     for child in (docTag.getiterator()):
-        if (child.text!=None or child.tail!=None) and re.search('^.*STYLE',(etree.tostring(child)).upper())==None:
+        if (child.text!=None or child.tail!=None) and re.search('^.*STYLE',(etree.tostring(child).decode('utf-8')).upper())==None:
             
             if child.text==None:
                 text=child.text
@@ -130,14 +130,14 @@ def sparkjob():
 
     dbCH_Dic=dbCH_FinalKm.map(lambda x: x[1]).reduce(lambda d0,d1: d0.update(d1) or d0)
     
-    Dic={v:k for k,v in dbCH_Dic.iteritems()}
+    Dic={v:k for k,v in dbCH_Dic.items()}
     
     dbCH_col=dbCH_FinalKm.collect()
 
     Cluster_Centres=[]
     for a in Ccentre:
         Cluster_Centres.append({Dic[i]:a[i] for i in numpy.nonzero(a)[0]})
-        print {Dic[i]:a[i] for i in numpy.nonzero(a)[0]}
+        print ({Dic[i]:a[i] for i in numpy.nonzero(a)[0]})
     #Cluster_Centres2=[]    
     #for centre in Cluster_Centres:
         #for key in centre.keys():

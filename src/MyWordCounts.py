@@ -32,4 +32,4 @@ wordCounts = textFile.flatMap(lambda line: line.split()) \
 
 op = wordCounts
 
-print op.take(5)
+print (op.take(10))
